@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grupos - Limited Posting</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: 
+                url('FondoNacson.jpg') center/cover no-repeat fixed,
+                radial-gradient(circle at top, rgba(29, 39, 48, 0.85) 0%, rgba(17, 22, 29, 0.9) 45%, rgba(7, 11, 16, 0.95) 100%);
+            background-blend-mode: multiply;
+            color: #d9dbe1;
+            min-height: 100vh;
+        }
+        
+        /* NAVEGACIÓN */
+        nav {
+            background: rgba(22, 31, 38, 0.94);
+            padding: 6px 12px;
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 8px 28px rgba(0,0,0,0.42);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        nav a {
+            width: 65px;
+            min-height: 65px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #e6e9ed;
+            background: rgba(255,255,255,0.06);
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 22px rgba(0,0,0,0.2);
+            transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+            padding: 4px;
+        }
+        
+        nav a:hover {
+            transform: translateY(-4px);
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(255,255,255,0.16);
+        }
+        
+        nav a .icon {
+            width: 30px;
+            height: 30px;
+            font-size: 18px;
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: linear-gradient(145deg, rgba(197,209,217,0.85), rgba(107,121,132,0.95));
+            color: #111;
+            box-shadow: inset 0 2px 0 rgba(255,255,255,0.18), inset 0 -2px 0 rgba(0,0,0,0.12);
+        }
+        
+        nav a img.nav-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-bottom: 3px;
+            box-shadow: inset 0 2px 0 rgba(255,255,255,0.18), inset 0 -2px 0 rgba(0,0,0,0.12);
+        }
+        
+        nav a span {
+            font-size: 12px;
+            text-align: center;
+            margin-top: 2px;
+            line-height: 1.2;
+        }
+
+        /* SECCIÓN DE GRUPOS */
+        .groups-section {
+            max-width: 1400px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .groups-container {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 30px;
+            min-height: 600px;
+        }
+
+        .groups-sidebar {
+            background: rgba(22, 31, 38, 0.94);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.42);
+            height: fit-content;
+        }
+
+        .groups-title {
+            color: #e6e9ed;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .groups-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            list-style: none;
+            width: 100%;
+            align-items: start;
+        }
+
+        .group-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 8px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+            min-height: 120px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .group-card:hover {
+            background: rgba(107, 70, 193, 0.2);
+            border-color: #6b46c1;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(107, 70, 193, 0.3);
+        }
+
+        .group-card.active {
+            background: linear-gradient(135deg, #6b46c1 0%, #8b5cf6 100%);
+            border-color: #8b5cf6;
+            box-shadow: 0 6px 25px rgba(107, 70, 193, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .group-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            flex-shrink: 0;
+        }
+
+        .group-name {
+            color: #e6e9ed;
+            font-size: 10px;
+            font-weight: 600;
+            line-height: 1.1;
+            text-align: center;
+            word-wrap: break-word;
+            max-width: 100%;
+        }
+
+        .group-card.active .group-name {
+            color: #ffffff;
+        }
+
+
+        .sponsored-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: linear-gradient(135deg, #9333ea, #ec4899, #f43f5e);
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(147, 51, 234, 0.6);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 18px;
+            height: 18px;
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 2px 12px rgba(147, 51, 234, 0.6);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 2px 20px rgba(147, 51, 234, 0.8);
+                transform: scale(1.05);
+            }
+        }
+
+        .group-card[data-group="game-devs"] {
+            background: linear-gradient(135deg, rgba(147, 51, 234, 0.15), rgba(236, 72, 153, 0.15));
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            overflow: hidden;
+        }
+
+        
+        @keyframes border-rotate {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .group-card[data-group="game-devs"]:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(147, 51, 234, 0.4);
+        }
+
+        .group-card[data-group="game-devs"] .group-name {
+            color: #e879f9;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(147, 51, 234, 0.5);
+        }
+
+        .group-details {
+            background: rgba(22, 31, 38, 0.94);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.42);
+        }
+
+        .group-info-card {
+            height: 100%;
+        }
+
+        .group-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .group-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            margin-right: 20px;
+            object-fit: cover;
+        }
+
+        .group-title-section {
+            flex: 1;
+        }
+
+        .group-main-title {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .group-subtitle {
+            color: #a78bfa;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .group-description {
+            margin-bottom: 30px;
+        }
+
+        .group-description p {
+            color: #d1d5db;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        /* Nuevo diseño de UGCs Destacados */
+        .ugc-featured-section {
+            background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 
+                0 15px 40px rgba(0,0,0,0.6),
+                inset 0 1px 0 rgba(255,255,255,0.05);
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .ugc-featured-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.3), transparent);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .ugc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            position: relative;
+        }
+
+        .ugc-title {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin: 0;
+            background: linear-gradient(135deg, #ffffff, #667eea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .ugc-store-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            box-shadow: 
+                0 6px 20px rgba(102, 126, 234, 0.5),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ugc-store-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .ugc-store-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 
+                0 12px 35px rgba(102, 126, 234, 0.7),
+                inset 0 1px 0 rgba(255,255,255,0.3);
+        }
+
+        .ugc-store-btn:hover::before {
+            left: 100%;
+        }
+
+        .ugc-cards {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+
+        .ugc-card {
+            background: linear-gradient(145deg, #2d2d2d, #1a1a1a);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: 
+                0 8px 30px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                inset 0 -1px 0 rgba(0,0,0,0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-width: 180px;
+            max-width: 220px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ugc-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .ugc-card:hover {
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 
+                0 12px 40px rgba(0,0,0,0.7),
+                inset 0 1px 0 rgba(255,255,255,0.2),
+                inset 0 -1px 0 rgba(0,0,0,0.4);
+            border-color: rgba(102, 126, 234, 0.3);
+            z-index: 10;
+            position: relative;
+        }
+
+        .ugc-item-3d {
+            width: 110px;
+            height: 110px;
+            border-radius: 16px;
+            object-fit: contain;
+            background: linear-gradient(145deg, rgba(0,0,0,0.3), rgba(0,0,0,0.1));
+            border: 2px solid rgba(255,255,255,0.15);
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.4));
+        }
+
+        .ugc-card:hover .ugc-item-3d {
+            transform: scale(1.02);
+            filter: drop-shadow(0 8px 16px rgba(102, 126, 234, 0.3));
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+
+        .ugc-item-info {
+            width: 100%;
+            position: relative;
+        }
+
+        .ugc-item-name {
+            font-size: 14px;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.3;
+            text-decoration: none;
+            margin: 0;
+            background: linear-gradient(135deg, #ffffff, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .ugc-card:hover .ugc-item-name {
+            background: linear-gradient(135deg, #ffffff, #667eea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transform: translateY(-1px);
+        }
+
+        .featured-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            margin-right: 12px;
+            object-fit: cover;
+        }
+
+        .featured-game-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            background: rgba(107, 70, 193, 0.2);
+        }
+
+        .featured-name {
+            color: #e6e9ed;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .groups-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .featured-sections {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVEGACIÓN -->
+    <nav>
+        <a href="pagina.html">
+            <img src="noFilter (2).webp" class="nav-icon" alt="Menú">
+            <span>Menú</span>
+        </a>
+        <a href="valores.html">
+            <div class="icon" style="padding: 4px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; background: rgba(255, 255, 255, 0.3);"><img src="Lista de Valores.png" alt="Values" style="width: 100%; height: 100%; object-fit: contain;"></div>
+            <span>Values</span>
+        </a>
+        <a href="grupos.html">
+            <div class="icon" style="padding: 4px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; background: rgba(255, 255, 255, 0.3);"><img src="Grupos.png" alt="Grupos" style="width: 100%; height: 100%; object-fit: contain;"></div>
+            <span>Grupos</span>
+        </a>
+        <a href="#juegos">
+            <div class="icon" style="padding: 4px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; background: rgba(255, 255, 255, 0.3);"><img src="Juegos.png" alt="Juegos" style="width: 100%; height: 100%; object-fit: contain;"></div>
+            <span>Juegos</span>
+        </a>
+        <a href="#staff">
+            <div class="icon" style="padding: 2px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; background: rgba(255, 255, 255, 0.3);"><img src="Staff.png" alt="Staff" style="width: 110%; height: 110%; object-fit: contain; margin: -5%;"></div>
+            <span>Staff</span>
+        </a>
+        <a href="#concursos">
+            <div class="icon" style="padding: 4px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; background: rgba(255, 255, 255, 0.3);"><img src="Concursos.png" alt="Concursos" style="width: 100%; height: 100%; object-fit: contain;"></div>
+            <span>Concursos</span>
+        </a>
+        <a href="#trade-ads">
+            <div class="icon" style="padding: 4px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; background: rgba(255, 255, 255, 0.3);"><img src="Trade ads.png" alt="Trade ads" style="width: 100%; height: 100%; object-fit: contain;"></div>
+            <span>Trade ads</span>
+        </a>
+        <a href="https://discord.com/invite/b4UsakcQ7G" target="_blank">
+            <img src="unnamedXD.webp" class="nav-icon" alt="Discord">
+            <span>Discord</span>
+        </a>
+    </nav>
+
+    <!-- SECCIÓN DE GRUPOS -->
+    <section class="groups-section">
+        <div class="groups-container">
+            <!-- COLUMNA IZQUIERDA - GRID DE GRUPOS -->
+            <div class="groups-sidebar">
+                <h3 class="groups-title">Grupos</h3>
+                <div class="groups-grid">
+                    <div class="group-card active" data-group="limited-posting">
+                        <div class="group-icon"><img src="LP1.webp" alt="Limited Posting (STUDIOS)" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;"></div>
+                        <span class="group-name">Limited Posting (STUDIOS)</span>
+                    </div>
+                    <div class="group-card" data-group="creative-studios">
+                        <div class="group-icon"><img src="LP2.webp" alt="Limited Posting 2" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;"></div>
+                        <span class="group-name">Limited Posting 2</span>
+                    </div>
+                    <div class="group-card" data-group="game-devs">
+                        <div class="sponsored-badge">💎</div>
+                        <div class="group-icon"><img src="TamaStudio.webp" alt="TamaStudio" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;"></div>
+                        <span class="group-name">TamaStudio</span>
+                    </div>
+                    <div class="group-card" data-group="indie-works">
+                        <div class="group-icon"><img src="LP3.webp" alt="Limited Posting 3" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;"></div>
+                        <span class="group-name">Limited Posting 3</span>
+                    </div>
+                    <div class="group-card" data-group="tech-hub">
+                        <div class="group-icon"><img src="LP4.webp" alt="Limited Posting 4" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;"></div>
+                        <span class="group-name">Limited Posting 4</span>
+                    </div>
+                    <div class="group-card" data-group="art-collective">
+                        <div class="group-icon"><img src="LP5.webp" alt="Limited Posting 5" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;"></div>
+                        <span class="group-name">Limited Posting 5</span>
+                    </div>
+                    <div class="group-card" data-group="music-studio">
+                        <div class="group-icon"><img src="LP6.webp" alt="Limited Posting 6" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;"></div>
+                        <span class="group-name">Limited Posting 6</span>
+                    </div>
+                    <div class="group-card" data-group="design-lab">
+                        <div class="group-icon"><img src="The cave.webp" alt="The cave" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;"></div>
+                        <span class="group-name">The cave</span>
+                    </div>
+                    <div class="group-card" data-group="dev-community">
+                        <div class="group-icon"><img src="AAAA.webp" alt="A -" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;"></div>
+                        <span class="group-name">A -</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA - BLOQUE DE DETALLES -->
+            <div class="group-details">
+                <div class="group-info-card" id="group-info">
+                    <div class="group-header">
+                        <img src="https://via.placeholder.com/80x80/6b46c1/ffffff?text=LP" alt="Group Icon" class="group-logo" id="group-logo">
+                        <div class="group-title-section">
+                            <h2 class="group-main-title" id="group-title">Limited Posting (STUDIOS)</h2>
+                            <p class="group-subtitle" id="group-subtitle">Estudio de desarrollo de UGCs premium</p>
+                        </div>
+                    </div>
+                    
+                    <div class="group-description">
+                        <p id="group-desc">Limited Posting Studios es un estudio especializado en la creación de contenido único y exclusivo para ROBLOX. Nos enfocamos en desarrollar UGCs de alta calidad con diseños innovadores y sistemas de rareza bien balanceados.</p>
+                    </div>
+
+                    <div class="ugc-featured-section">
+                    <div class="ugc-header">
+                        <h3 class="ugc-title">UGCS DESTACADOS</h3>
+                        <a href="#" id="store-link" target="_blank" class="ugc-store-btn">VER TIENDA COMPLETA</a>
+                    </div>
+                    <div class="ugc-cards" id="featured-ugcs">
+                        <!-- Las tarjetas se generarán dinámicamente con JavaScript -->
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- JAVASCRIPT PARA GRUPOS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const groupsData = {
+                'limited-posting': {
+                    title: 'Limited Posting (STUDIOS)',
+                    subtitle: 'Creado por A_DLook',
+                    description: 'Grupo dedicado al Soporte de Juegos, Eventos que posee distintos UGCs para la categoría 8-bit y Limitados de Roblox',
+                    logo: 'LP1.webp',
+                    storeLink: 'https://www.roblox.com/communities/33047100/LimitedPosting-Studios#!/about',
+                    ugcs: [
+                        { name: 'White Border 8-Bit HP Bar [ADDON]', img: 'White Border 8-Bit HP Bar [ADDON].webp' },
+                        { name: 'Red Daemonshank [ADDON]', img: 'Red Daemonshank [ADDON].webp' },
+                        { name: 'Blue Bluesteel 8-Bit Royal Crown [ADDON]', img: 'Blue Bluesteel 8-Bit Royal Crown [ADDON].webp' },
+                        { name: 'Black 8-Bit HP Bar [ADDON]', img: 'Black 8-Bit HP Bar [ADDON].webp' }
+                    ],
+                    games: [
+                        { name: 'Limited Posting Universe', icon: '🎯' },
+                        { name: 'UGC Creator Challenge', icon: '🌟' },
+                        { name: 'Rare Items Hunt', icon: '🏆' }
+                    ]
+                },
+                'creative-studios': {
+                    title: 'Limited Posting 2',
+                    subtitle: 'Creado por A_DHide',
+                    description: 'Grupo dedicado a los Addons',
+                    logo: 'LP2.webp',
+                    storeLink: 'https://www.roblox.com/communities/34399314/Limited-Posting-2-Clothing-Group#!/about',
+                    ugcs: [
+                        { name: 'Red - Brighteyes\' Bloxy Cola Hat [ADDON]', img: 'Red - Brighteyes\' Bloxy Cola Hat [ADDON].webp' },
+                        { name: 'Pink - Brighteyes\' Bloxy Cola Hat [ADDON]', img: 'Pink - Brighteyes\' Bloxy Cola Hat [ADDON].webp' },
+                        { name: 'Gray - Brighteyes\' Bloxy Cola Hat [ADDON]', img: 'Gray - Brighteyes\' Bloxy Cola Hat [ADDON].webp' },
+                        { name: 'Blue - Brighteyes\' Bloxy Cola Hat [ADDON]', img: 'Blue - Brighteyes\' Bloxy Cola Hat [ADDON].webp' }
+                    ],
+                    games: [
+                        { name: 'Design Workshop 2', icon: '??' },
+                        { name: 'Art Challenge 2', icon: '??' },
+                        { name: 'Creative Mode 2', icon: '??' }
+                    ]
+                },
+                'game-devs': {
+                    title: 'TamaStudio',
+                    subtitle: 'Creado por: supernick2468',
+                    description: 'UGC accesorios de moda para todos los usuarios fanaticos de los accesorios populares, no duden en comprar estos objetos muy cool🔥✅️',
+                    logo: 'TamaStudio.webp',
+                    storeLink: 'https://www.roblox.com/communities/35464543/TamaStudio#!/about',
+                    ugcs: [
+                        { name: 'Raccoon Grown a Garden', img: 'Racoon.webp' },
+                        { name: 'Skull Extinct Draco', img: 'SkullDraco.webp' },
+                        { name: 'Stitch Backpack', img: 'Stic.webp' },
+                        { name: 'Valk From Beyond', img: 'Valk From Beyond.webp' }
+                    ],
+                    games: [
+                        { name: 'Shopping Arena', icon: '??' },
+                        { name: 'Retail World', icon: '??' },
+                        { name: 'Store Battle', icon: '??' }
+                    ]
+                },
+                'indie-works': {
+                    title: 'Limited Posting 3',
+                    subtitle: 'Creado por A_DHide',
+                    description: 'Grupo dedicado a los RipOffs y Rediseños',
+                    logo: 'LP3.webp',
+                    storeLink: 'https://www.roblox.com/communities/35010637/Limited-Posting-3-UGC#!/about',
+                    ugcs: [
+                        { name: 'Teal Yang', img: 'Teal Yang.webp' },
+                        { name: 'Classic Anarchism Flag', img: 'Classic Anarchism Flag.webp' },
+                        { name: 'Tape GoreX', img: 'Tape GoreX.webp' },
+                        { name: 'Durr Little Friend Carebag', img: 'Durr Little Friend Carebag.webp' }
+                    ],
+                    games: [
+                        { name: 'Indie Showcase 3', icon: '??' },
+                        { name: 'Solo Dev Journey 3', icon: '??' },
+                        { name: 'Creative Freedom 3', icon: '??' }
+                    ]
+                },
+                'tech-hub': {
+                    title: 'Limited Posting 4',
+                    subtitle: 'Creado por A_DHide',
+                    description: 'Grupo dedicado a los RipOffs y UGCs Aleatorios',
+                    logo: 'LP4.webp',
+                    storeLink: 'https://www.roblox.com/communities/14650356/Limited-Posting-4-knockoffs#!/about',
+                    ugcs: [
+                        { name: 'Valkyria del Club America', img: 'Valkyria del Club America.webp' },
+                        { name: 'Vampiric Cat', img: 'Vampiric Cat.webp' },
+                        { name: 'Valkyria de Las Chivas', img: 'Valkyria de Las Chivas.webp' },
+                        { name: 'Pink Clockwork HeartPhones', img: 'Pink Clockwork HeartPhones.webp' }
+                    ],
+                    games: [
+                        { name: 'Tech Arena 4', icon: '??' },
+                        { name: 'Digital World 4', icon: '??' },
+                        { name: 'Cyber Battle 4', icon: '??' }
+                    ]
+                },
+                'art-collective': {
+                    title: 'Limited Posting 5',
+                    subtitle: 'Creado por A_DHide',
+                    description: 'Grupo dedicado a la Ropa 2D',
+                    logo: 'LP5.webp',
+                    storeLink: 'https://www.roblox.com/communities/35348729/Limited-Posting-5-REUNITED#!/about',
+                    ugcs: [
+                        { name: 'Abstract SHIRT', img: 'Abstract SHIRT.png' },
+                        { name: 'Cyan Striped Sweater y2k', img: 'Cyan Striped Sweater y2k.png' },
+                        { name: 'Gray Soft Striped Sweater y2k', img: 'Gray Soft Striped Sweater y2k.png' },
+                        { name: 'Purple Striped Sweater y2k', img: 'Purple Striped Sweater y2k.png' }
+                    ],
+                    games: [
+                        { name: 'Art Gallery 5', icon: '??' },
+                        { name: 'Paint Challenge 5', icon: '??' },
+                        { name: 'Creative Studio 5', icon: '??' }
+                    ]
+                },
+                'music-studio': {
+                    title: 'Limited Posting 6',
+                    subtitle: 'Creado por A_DHide',
+                    description: 'Grupo Dedicado a los Emotes y Bailes',
+                    logo: 'LP6.webp',
+                    storeLink: 'https://www.roblox.com/communities/164807601/Limited-Posting-6-EMOTES#!/about',
+                    ugcs: [
+                        { name: 'Exhausted Animation - Cartoon Style', img: 'Exhausted Animation - Cartoon Style.webp' },
+                        { name: 'Spin spawn Animation', img: 'Spin spawn Animation.webp' },
+                        { name: 'Tall Scary Animatronic Rage (emote)', img: 'Tall Scary Animatronic Rage (emote).webp' },
+                        { name: 'The Funny Skeleton Idle Animation', img: 'The Funny Skeleton Idle Animation.webp' }
+                    ],
+                    games: [
+                        { name: 'Music Battle 6', icon: '??' },
+                        { name: 'Rhythm Game 6', icon: '??' },
+                        { name: 'Sound Studio 6', icon: '??' }
+                    ]
+                },
+                'design-lab': {
+                    title: 'The cave',
+                    subtitle: 'Creado por Toglesia y A_DLook',
+                    description: 'Grupo principalmente dedicado a UGCs de la Sub-Cultura Gotica\nCo-owner: @toglesia',
+                    logo: 'The cave.webp',
+                    storeLink: 'https://www.roblox.com/communities/374175600/The-Cave-UGC#!/about',
+                    ugcs: [
+                        { name: 'Red Gothic Queen Crown', img: 'Red Gothic Queen Crown.webp' },
+                        { name: 'Purple Lipstick Face Mark', img: 'Purple Lipstick Face Mark.webp' },
+                        { name: 'Darkness Gothic Face', img: 'Darkness Gothic Face.webp' },
+                        { name: 'Blue Vampire Sunglasses', img: 'Blue Vampire Sunglasses.webp' }
+                    ],
+                    games: [
+                        { name: 'Cave Challenge', icon: '??' },
+                        { name: 'Dark Lab', icon: '??' },
+                        { name: 'Shadow Workshop', icon: '??' }
+                    ]
+                },
+                'dev-community': {
+                    title: 'A -',
+                    subtitle: 'Creado por: A -',
+                    description: 'Grupo Antiguo de A_DLook',
+                    logo: 'AAAA.webp',
+                    storeLink: 'https://www.roblox.com/communities/5234981/A#!/about',
+                    ugcs: [
+                        { name: 'N/A', img: '' },
+                        { name: 'N/A', img: '' },
+                        { name: 'N/A', img: '' },
+                        { name: 'N/A', img: '' }
+                    ],
+                    games: [
+                        { name: 'Alpha Hub', icon: '??' },
+                        { name: 'Elite Battle', icon: '??' },
+                        { name: 'Advanced Project', icon: '??' }
+                    ]
+                }
+            };
+
+            const groupCards = document.querySelectorAll('.group-card');
+            const groupTitle = document.getElementById('group-title');
+            const groupSubtitle = document.getElementById('group-subtitle');
+            const groupDesc = document.getElementById('group-desc');
+            const groupLogo = document.getElementById('group-logo');
+            const featuredUgcs = document.getElementById('featured-ugcs');
+            const storeLink = document.getElementById('store-link');
+            
+            function updateGroupDetails(groupKey) {
+                const group = groupsData[groupKey];
+                
+                if (group) {
+                    // Actualizar información principal
+                    groupTitle.textContent = group.title;
+                    groupSubtitle.textContent = group.subtitle;
+                    groupDesc.textContent = group.description;
+                    groupLogo.src = group.logo;
+                    groupLogo.alt = group.title;
+
+                    // Actualizar UGCs destacados
+                    featuredUgcs.innerHTML = group.ugcs.map(ugc => `
+                        <div class="ugc-card">
+                            <img src="${ugc.img}" alt="${ugc.name}" class="ugc-item-3d">
+                            <div class="ugc-item-info">
+                                <div class="ugc-item-name">${ugc.name}</div>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    // Actualizar enlace del botón VER TIENDA COMPLETA
+                    if (group.storeLink) {
+                        storeLink.href = group.storeLink;
+                    }
+
+                    
+                    // Actualizar estado activo
+                    groupCards.forEach(card => {
+                        card.classList.remove('active');
+                        if (card.dataset.group === groupKey) {
+                            card.classList.add('active');
+                        }
+                    });
+                }
+            }
+
+            // Inicializar con el primer grupo
+            updateGroupDetails('limited-posting');
+
+            // Event listeners para los grupos
+            groupCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const groupKey = this.dataset.group;
+                    updateGroupDetails(groupKey);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

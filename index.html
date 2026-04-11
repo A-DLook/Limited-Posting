@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Limited Posting - Trading ROBLOX</title>
+    <link rel="icon" type="image/webp" href="LP1.webp">
+    <link rel="shortcut icon" type="image/webp" href="LP1.webp">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle at top, #1d2730 0%, #11161d 45%, #070b10 100%);
+            color: #d9dbe1;
+        }
+        
+        /* NAVEGACIÓN */
+        nav {
+            background: rgba(22, 31, 38, 0.94);
+            padding: 6px 12px;
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 8px 28px rgba(0,0,0,0.42);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        nav a {
+            width: 65px;
+            min-height: 65px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #e6e9ed;
+            background: rgba(255,255,255,0.06);
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 22px rgba(0,0,0,0.2);
+            transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+            padding: 4px;
+        }
+        
+        nav a:hover {
+            transform: translateY(-4px);
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(255,255,255,0.16);
+        }
+        
+        nav a .icon {
+            width: 30px;
+            height: 30px;
+            font-size: 18px;
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: linear-gradient(145deg, rgba(197,209,217,0.85), rgba(107,121,132,0.95));
+            color: #111;
+            box-shadow: inset 0 2px 0 rgba(255,255,255,0.18), inset 0 -2px 0 rgba(0,0,0,0.12);
+        }
+        
+        nav a img.nav-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-bottom: 3px;
+            box-shadow: inset 0 2px 0 rgba(255,255,255,0.18), inset 0 -2px 0 rgba(0,0,0,0.12);
+        }
+        
+        nav a span {
+            font-size: 12px;
+            text-align: center;
+            margin-top: 2px;
+            line-height: 1.2;
+        }
+        
+        /* CONTENEDOR HERO */
+        .hero-wrapper {
+            background: linear-gradient(180deg, rgba(18, 24, 30, 0.88), rgba(13, 18, 24, 0.92)), 
+                        url('RobloxScreenShot20240226_125856990.png') center/cover no-repeat;
+            padding: 0;
+        }
+        
+        /* HEADER PRINCIPAL */
+        .hero {
+            background: rgba(18, 24, 30, 0.88);
+            padding: 48px 36px;
+            display: grid;
+            grid-template-columns: 1.1fr 0.85fr;
+            gap: 34px;
+            max-width: 1180px;
+            margin: 0 auto;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 20px 58px rgba(0,0,0,0.4);
+            position: relative;
+            top: 28px;
+            backdrop-filter: blur(8px);
+        }
+        
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .hero h1 {
+            font-size: 74px;
+            font-weight: 800;
+            color: #edf2f7;
+            line-height: 0.95;
+            margin-bottom: 18px;
+            letter-spacing: -2px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.28);
+        }
+        
+        .hero p {
+            font-size: 20px;
+            color: #c6ccd3;
+            margin-bottom: 30px;
+            max-width: 680px;
+        }
+        
+        .discord-cta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #e0e5ea;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 28px;
+        }
+        
+        .hero-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 170px;
+            padding: 14px 22px;
+            border-radius: 18px;
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+            color: #f3f5f7;
+            background: linear-gradient(145deg, #52636f 0%, #2d3843 100%);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 16px 30px rgba(0,0,0,0.28);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+        }
+        
+        .hero-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.32);
+            background: linear-gradient(145deg, #5f7081 0%, #374350 100%);
+        }
+        
+        .hero-button.secondary {
+            background: linear-gradient(145deg, #8c98a5 0%, #5e6b79 100%);
+        }
+        
+        .hero-button.ghost {
+            background: rgba(255,255,255,0.06);
+            color: #e6ebf0;
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+        
+        .hero-button.ghost:hover {
+            background: rgba(255,255,255,0.14);
+        }
+        
+        .discord-btn {
+            background: linear-gradient(145deg, #3d62a9 0%, #24385f 100%);
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.25s;
+            box-shadow: 0 10px 26px rgba(0,0,0,0.35);
+            padding: 0;
+        }
+        
+        .discord-btn img {
+            width: 36px;
+            height: 36px;
+            display: block;
+        }
+        
+        .discord-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.45);
+        }
+        
+        .hero-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .hero-image img {
+            width: 100%;
+            max-width: 380px;
+            height: auto;
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 22px 44px rgba(0,0,0,0.5);
+            object-fit: cover;
+        }
+        
+        /* SECCIÓN DE NOTICIAS */
+        .news-wrapper {
+            background-color: transparent;
+            padding: 24px 0 70px;
+        }
+        
+        .news-section {
+            max-width: 980px;
+            margin: 0 auto;
+            background-color: rgba(18, 24, 31, 0.92);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 44px 40px;
+            border-radius: 26px;
+            box-shadow: 0 14px 42px rgba(0,0,0,0.32);
+        }
+        
+        .news-section h2 {
+            font-size: 46px;
+            color: #edf2f7;
+            margin-bottom: 34px;
+            font-weight: 800;
+        }
+        
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 26px;
+        }
+        
+        .news-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 28px;
+            border-radius: 18px;
+            box-shadow: 0 14px 32px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease;
+        }
+        
+        .news-card:hover {
+            transform: translateY(-6px);
+        }
+        
+        .news-card h3 {
+            color: #edf2f7;
+            margin-bottom: 14px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .news-card p {
+            color: #c9d2db;
+            line-height: 1.7;
+            font-size: 15px;
+        }
+        
+        .featured-news {
+            display: grid;
+            grid-template-columns: minmax(320px, 1.2fr) 1.6fr;
+            gap: 24px;
+            margin-top: 28px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 28px;
+            border-radius: 24px;
+            box-shadow: 0 16px 36px rgba(0,0,0,0.24);
+            align-items: center;
+        }
+        
+        .featured-news img,
+        .featured-news video {
+            display: block;
+            width: 100%;
+            max-height: 380px;
+            min-height: 300px;
+            aspect-ratio: 16 / 9;
+            height: auto;
+            border-radius: 22px;
+            object-fit: cover;
+            background: rgba(0,0,0,0.15);
+            box-shadow: 0 18px 42px rgba(0,0,0,0.28);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .featured-news video {
+            transform: translateX(4px);
+        }
+        
+        .featured-news h3 {
+            color: #f7f6ff;
+            font-size: 36px;
+            font-weight: 900;
+            letter-spacing: 1.2px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            line-height: 1.0;
+        }
+        
+        .featured-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 18px;
+            border-radius: 12px;
+            background: rgba(0,0,0,0.7);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+        
+        .featured-news p {
+            color: #d8dbe4;
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+        
+        .featured-news .featured-cta {
+            color: #00ff00;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            line-height: 1.2;
+            margin-top: 16px;
+        }
+        
+        .featured-news .featured-cta.purple-text {
+            color: #d091ff !important;
+        }
+        
+        .featured-text-content {
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .featured-text-content h3 {
+            margin-bottom: 20px;
+        }
+        
+        .featured-text-content p {
+            margin-bottom: 16px;
+            max-width: 500px;
+            text-align: justify;
+        }
+        
+        .game-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #ffffff;
+        }
+        
+        /* FOOTER */
+        footer {
+            background-color: #111;
+            color: #ddd;
+            text-align: center;
+            padding: 30px 40px;
+            margin-top: 0;
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            nav {
+                gap: 14px;
+            }
+            .hero {
+                padding: 36px 24px;
+                gap: 30px;
+                grid-template-columns: 1fr;
+            }
+            .hero h1 {
+                font-size: 58px;
+            }
+            .hero p {
+                font-size: 18px;
+            }
+            .hero-image img {
+                max-width: 100%;
+            }
+        }
+        
+        @media (max-width: 680px) {
+            nav {
+                justify-content: space-between;
+                padding: 18px 14px;
+            }
+            nav a {
+                width: 90px;
+                min-height: 90px;
+                padding: 10px 8px;
+            }
+            .hero {
+                padding: 28px 18px;
+            }
+            .hero h1 {
+                font-size: 42px;
+            }
+            .news-section {
+                padding: 28px 18px;
+            }
+            .news-section h2 {
+                font-size: 32px;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- NAVEGACIÓN -->
+    <nav>
+        <a href="#menu">
+            <img src="noFilter (2).webp" class="nav-icon" alt="Menú">
+            <span>Menú</span>
+        </a>
+        <a href="valores.html">
+            <div class="icon" style="padding: 4px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; background: rgba(255, 255, 255, 0.3);"><img src="Lista de Valores.png" alt="Values" style="width: 100%; height: 100%; object-fit: contain;"></div>
+            <span>Values</span>
+        </a>
+        <a href="grupos.html">
+            <div class="icon" style="padding: 4px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; background: rgba(255, 255, 255, 0.3);"><img src="Grupos.png" alt="Grupos" style="width: 100%; height: 100%; object-fit: contain;"></div>
+            <span>Grupos</span>
+        </a>
+        <a href="#juegos">
+            <div class="icon" style="padding: 4px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; background: rgba(255, 255, 255, 0.3);"><img src="Juegos.png" alt="Juegos" style="width: 100%; height: 100%; object-fit: contain;"></div>
+            <span>Juegos</span>
+        </a>
+        <a href="#staff">
+            <div class="icon" style="padding: 2px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; background: rgba(255, 255, 255, 0.3);"><img src="Staff.png" alt="Staff" style="width: 110%; height: 110%; object-fit: contain; margin: -5%;"></div>
+            <span>Staff</span>
+        </a>
+        <a href="#concursos">
+            <div class="icon" style="padding: 4px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; background: rgba(255, 255, 255, 0.3);"><img src="Concursos.png" alt="Concursos" style="width: 100%; height: 100%; object-fit: contain;"></div>
+            <span>Concursos</span>
+        </a>
+        <a href="#trade-ads">
+            <div class="icon" style="padding: 4px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; background: rgba(255, 255, 255, 0.3);"><img src="Trade ads.png" alt="Trade ads" style="width: 100%; height: 100%; object-fit: contain;"></div>
+            <span>Trade ads</span>
+        </a>
+        <a href="https://discord.com/invite/b4UsakcQ7G" target="_blank">
+            <img src="unnamedXD.webp" class="nav-icon" alt="Discord">
+            <span>Discord</span>
+        </a>
+    </nav>
+
+    <!-- HERO PRINCIPAL -->
+    <div class="hero-wrapper">
+        <div class="hero">
+            <div class="hero-content">
+                <h1>LIMITED<br>POSTING</h1>
+                <p>Comunidad de Trading de ROBLOX hispano hablante</p>
+                <div class="discord-cta">
+                    <span>¡ÚNETE A NUESTRO SERVIDOR DE DISCORD!</span>
+                    <a href="https://discord.com/invite/b4UsakcQ7G" target="_blank" class="discord-btn">
+                        <img src="unnamedXD.webp" alt="Discord">
+                    </a>
+                </div>
+                <div class="hero-buttons">
+                    <a href="valores.html" class="hero-button">Lista de Valores</a>
+                    <a href="#trades" class="hero-button secondary">Trade Ads</a>
+                    <a href="grupos.html" class="hero-button ghost">Ver Grupos</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="noFilter (2).webp" alt="Avatar">
+            </div>
+        </div>
+    </div>
+
+    <div class="news-wrapper">
+        <section class="news-section">
+            <h2>Noticias acerca del servidor!</h2>
+            <div class="featured-news">
+                <video autoplay muted loop playsinline preload="metadata" poster="noFilter%20(2).webp">
+                    <source src="VID%203%20CROWN.mp4" type="video/mp4">
+                    Tu navegador no puede reproducir este video.
+                </video>
+                <div>
+                    <h3>NUEVO OBJETO UGC LIMITADO!</h3>
+                    <div class="featured-tag">Demise - Θέμα στέμματος</div>
+                    <p>Exclusivo para los boosters del servidor. Consigue este objeto único antes de que se agote y presume tu estatus en la comunidad.</p>
+                    <div class="featured-cta purple-text">EXCLUSIVO PARA LOS SERVER BOOSTERS</div>
+                </div>
+            </div>
+            <div class="featured-news">
+                <div class="featured-text-content">
+                    <h3>¡NUEVO JUEGO DE LIMITED POSTING!</h3>
+                    <p>Después de un mucho trabajo el equipo de Limited Posting lanzó en nuevo juego llamado <span class="game-title">"Limited Posting Unboxing UGCS!"</span></p>
+                    <p>Donde se pueden obtener UGCs Limitados a través de Cajas, Y además se pueden <span style="color: #ffcc00;">intercambiar y Coleccionar!</span></p>
+                    <a href="https://www.roblox.com/games/94495161190781/Limited-Posting-Unboxing-UGCS#!/about" target="_blank" class="featured-cta">¡JUEGA AHORA!</a>
+                </div>
+                <img src="Noticia2.png" alt="Nuevo Juego de Limited Posting">
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Limited Posting. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        console.log('Limited Posting - Web activa');
+    </script>
+</body>
+</html>
